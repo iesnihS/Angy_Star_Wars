@@ -10,3 +10,9 @@
 [submodule "bgfx"]
 	path = bgfx
 	url = https://github.com/bkaradzic/bgfx/
+[submodule "build/vs2022/imgui"]
+	path = build/vs2022/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "imgui"]
+	path = imgui
+	url = https://github.com/ocornut/imgui.git
