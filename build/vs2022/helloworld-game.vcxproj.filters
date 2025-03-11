@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="bm">
+      <UniqueIdentifier>{54775900-4003-880B-A9B1-880B955C880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bm\res">
+      <UniqueIdentifier>{8DB948F4-795B-73CA-6216-871E4E57FA1A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bm\shdr">
+      <UniqueIdentifier>{D482607D-4062-DF18-497A-6AEFB5D8457A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bmg">
+      <UniqueIdentifier>{3B62880B-A76B-887C-30E7-9E7C9CEF937C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\bm\Game.hpp">
+      <Filter>bm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bm\Input.hpp">
+      <Filter>bm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bm\Lib.hpp">
+      <Filter>bm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bm\Math.hpp">
+      <Filter>bm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bm\Sprite.hpp">
+      <Filter>bm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bm\shdr\fs_sprite.bin.h">
+      <Filter>bm\shdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bm\shdr\vs_sprite.bin.h">
+      <Filter>bm\shdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bmg\Game.hpp">
+      <Filter>bmg</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\bm\Game.cpp">
+      <Filter>bm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\bm\Input.cpp">
+      <Filter>bm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\bm\Lib.cpp">
+      <Filter>bm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\bm\Sprite.cpp">
+      <Filter>bm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\bmg\Game.cpp">
+      <Filter>bmg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\helloworld-game.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\bm\res\gfx.zip">
+      <Filter>bm\res</Filter>
+    </None>
+    <None Include="..\..\bm\shdr\fs_sprite.sc">
+      <Filter>bm\shdr</Filter>
+    </None>
+    <None Include="..\..\bm\shdr\varying.def.sc">
+      <Filter>bm\shdr</Filter>
+    </None>
+    <None Include="..\..\bm\shdr\vs_sprite.sc">
+      <Filter>bm\shdr</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\bm\res\ammo_BBurn.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\ammo_BDavidian.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\ammo_CBazooka.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\catB_run1.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\catC_run1.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\fxShoot_CBazooka.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\ground.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\phi_angry.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\pixel.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\pixel_transp.png">
+      <Filter>bm\res</Filter>
+    </Image>
+    <Image Include="..\..\bm\res\red.png">
+      <Filter>bm\res</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
