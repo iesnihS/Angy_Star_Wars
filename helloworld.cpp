@@ -16,6 +16,9 @@
 #endif
 #include <GLFW/glfw3native.h>
 #include "logo.h"
+#include "imgui/imgui.h"
+#include "imgui/backends/imgui_impl_opengl3.h"
+#include "imgui/backends/imgui_impl_glfw.h"
 
 static bool s_showStats = false;
 
@@ -61,6 +64,9 @@ int main(int argc, char **argv)
 	init.resolution.reset = BGFX_RESET_VSYNC;
 	if (!bgfx::init(init))
 		return 1;
+
+	//IMGUI_CHECKVERSION();
+
 	// Set view 0 to the same dimensions as the window and to clear the color buffer.
 	const bgfx::ViewId kClearView = 0;
 	bgfx::setViewClear(kClearView, BGFX_CLEAR_COLOR);
