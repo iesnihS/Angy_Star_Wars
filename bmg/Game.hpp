@@ -5,8 +5,8 @@ namespace bmg {
 	class Game : public bm::Game{
 		typedef bm::Game Super;
 	public:
-		bm::Sprite			red;
-		bm::SpriteBatch		bg;
+		bm::Sprite			playerShip;
+		//bm::SpriteBatch		bg;
 	public:
 							Game();
 		virtual				~Game() {};

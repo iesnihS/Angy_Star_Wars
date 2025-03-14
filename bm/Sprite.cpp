@@ -3,7 +3,8 @@
 
 using namespace bm;
 
-void bm::Sprite::draw(){
+void bm::Sprite::draw()
+{
 	bm::setShader(mat.shdr);
 	bm::makeRenderStates();
 	bgfx::setTexture(0, mat.sampler, mat.tex.hdl);
@@ -17,13 +18,13 @@ void bm::Sprite::draw(){
 	bm::drawQuad(fp, size, {1,1,1,1}, flippedX);
 }
 
-bm::Sprite::Sprite(){
-}
+bm::Sprite::Sprite(){}
 
-void bm::SpriteBatch::draw() {
+void bm::SpriteBatch::draw()
+{
 	int nb = position.size();
-	if (!nb)
-		return;
+	if (!nb) return;
+
 	bgfx::TransientVertexBuffer tvb;
 	int maxVertices = 6 * nb;
 	bgfx::allocTransientVertexBuffer(&tvb, maxVertices, PosUVColVertex::vtx_layout);
@@ -31,7 +32,8 @@ void bm::SpriteBatch::draw() {
 	memset(vtxData, 0, maxVertices * sizeof(PosUVColVertex));
 
 	int ofs = 0;
-	for (int i = 0; i < nb; ++i) {
+	for (int i = 0; i < nb; ++i) 
+	{
 		auto& pos = position[i];
 		auto& col = color[i];
 		auto& sz = size[i];
@@ -43,19 +45,24 @@ void bm::SpriteBatch::draw() {
 		PosUVColVertex& v5 = *(vtxData + 5 + ofs);
 		float w = sz.x;
 		float h = sz.y;
-		float depth = 0.01f;//because default render state is set to zless
+		float depth = 0.01f; //because default render state is set to zless
 
-		v0.setPos(bx::Vec3(pos.x + 0, pos.y + h, depth));	v0.setUV({ 0.f,		1.0f });
-		v1.setPos(bx::Vec3(pos.x + 0, pos.y + 0, depth));	v1.setUV({ 0.0f,	0.0f });
-		v2.setPos(bx::Vec3(pos.x + w, pos.y + 0, depth));	v2.setUV({ 1.0f,	0.0f });
+		v0.setPos(bx::Vec3(pos.x, pos.y + h, depth));
+		v0.setUV({ 0.0f, 1.0f });
+		v1.setPos(bx::Vec3(pos.x, pos.y, depth));
+		v1.setUV({ 0.0f, 0.0f });
+		v2.setPos(bx::Vec3(pos.x + w, pos.y, depth));
+		v2.setUV({ 1.0f, 0.0f });
 
-		v3.setPos(bx::Vec3(pos.x + w, pos.y + 0, depth));	v3.setUV({ 1.f,		0.0f });
-		v4.setPos(bx::Vec3(pos.x + w, pos.y + h, depth));	v4.setUV({ 1.0f,	1.0f });
-		v5.setPos(bx::Vec3(pos.x + 0, pos.y + h, depth));	v5.setUV({ 0.0f,	1.0f });
+		v3.setPos(bx::Vec3(pos.x + w, pos.y + 0, depth));
+		v3.setUV({ 1.0f, 0.0f });
+		v4.setPos(bx::Vec3(pos.x + w, pos.y + h, depth));
+		v4.setUV({ 1.0f, 1.0f });
+		v5.setPos(bx::Vec3(pos.x + 0, pos.y + h, depth));
+		v5.setUV({ 0.0f, 1.0f });
 
-		std::vector<PosUVColVertex*>vec = { &v0,&v1,&v2,&v3,&v4,&v5 };
-		for (auto& v : vec)
-			v->setCol(col);
+		std::vector<PosUVColVertex*>vec = { &v0, &v1, &v2, &v3, &v4, &v5 };
+		for (auto& v : vec) v->setCol(col);
 
 		int nextQuadofs = 6;
 		ofs += nextQuadofs;
@@ -68,14 +75,16 @@ void bm::SpriteBatch::draw() {
 	bgfx::submit(0, mat.shdr);
 }
 
-void bm::SpriteBatch::reserve(int nb){
+void bm::SpriteBatch::reserve(int nb)
+{
 	position.reserve(nb);
 	size.reserve(nb);
 	uv.reserve(nb);
 	color.reserve(nb);
 }
 
-void bm::SpriteBatch::resize(int nb) {
+void bm::SpriteBatch::resize(int nb)
+{
 	position.resize(nb, {0,0});
 	size.resize(nb, {0,0});
 	uv.resize(nb, {0,0,1,1});
