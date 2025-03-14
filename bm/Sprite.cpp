@@ -1,5 +1,5 @@
-#include "Lib.hpp"
 #include "Sprite.hpp"
+#include "Lib.hpp"
 
 using namespace bm;
 

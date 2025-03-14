@@ -76,8 +76,9 @@ int main(int argc, char **argv)
 		}
 		// This dummy draw call is here to make sure that view 0 is cleared if no other draw calls are submitted to view 0.
 		bgfx::touch(kClearView);
+
 		// Use debug font to print information about this example.
-		bgfx::dbgTextClear();
+		/*bgfx::dbgTextClear();
 		bgfx::dbgTextImage(bx::max<uint16_t>(uint16_t(width / 2 / 8), 20) - 20, bx::max<uint16_t>(uint16_t(height / 2 / 16), 6) - 6, 40, 12, s_logo, 160);
 		bgfx::dbgTextPrintf(0, 0, 0x0f, "Press F1 to toggle stats.");
 		bgfx::dbgTextPrintf(0, 1, 0x0f, "Color can be changed with ANSI \x1b[9;me\x1b[10;ms\x1b[11;mc\x1b[12;ma\x1b[13;mp\x1b[14;me\x1b[0m code too.");
@@ -86,7 +87,8 @@ int main(int argc, char **argv)
 		const bgfx::Stats* stats = bgfx::getStats();
 		bgfx::dbgTextPrintf(0, 2, 0x0f, "Backbuffer %dW x %dH in pixels, debug text %dW x %dH in characters.", stats->width, stats->height, stats->textWidth, stats->textHeight);
 		// Enable stats or debug text.
-		bgfx::setDebug(s_showStats ? BGFX_DEBUG_STATS : BGFX_DEBUG_TEXT);
+		bgfx::setDebug(s_showStats ? BGFX_DEBUG_STATS : BGFX_DEBUG_TEXT);*/
+
 		// Advance to next frame. Process submitted rendering primitives.
 		bgfx::frame();
 	}
