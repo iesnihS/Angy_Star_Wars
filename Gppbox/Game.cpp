@@ -34,14 +34,6 @@ Game::Game(sf::RenderWindow * win) {
 
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
 	
-	for (int i = 0; i < C::RES_X / C::CELL_SIZE; ++i)
-		walls.push_back( Vector2i(i, lastLine) );
-
-	walls.push_back(Vector2i(cols >> 2, lastLine-2));
-	walls.push_back(Vector2i((cols >> 2) - 1, lastLine - 2));
-
-	
-	cacheWalls();
 	initMainChar(3,54,0.5f,0.99f);
 
 	cam->SetFollowTarget(ents[0], { 0, -300.f }, {250.f, 0.f });
@@ -86,16 +78,6 @@ void Game::initEnnemy(int cx, int cy)
 	ents.push_back(e);
 }
 
-void Game::cacheWalls()
-{
-	wallSprites.clear();
-	for (Vector2i & w : walls) {
-		sf::RectangleShape rect(Vector2f(C::CELL_SIZE, C::CELL_SIZE));
-		rect.setPosition((float)w.x * C::CELL_SIZE, (float)w.y * C::CELL_SIZE);
-		rect.setFillColor(sf::Color(0x07ff07ff));
-		wallSprites.push_back(rect);
-	}
-}
 
 void Game::processInput(sf::Event ev) {
 	if (ev.type == sf::Event::Closed) {
@@ -117,7 +99,7 @@ static double g_tickTimer = 0.0;
 void Game::pollInput(double dt) {
 
 	auto& io = ImGui::GetIO();
-	if (dt == 0 || io.WantCaptureMouse || io.WantCaptureKeyboard || canBuild)
+	if (dt == 0 || io.WantCaptureMouse || io.WantCaptureKeyboard)
 	{
 		if (ents.size()) {
 			auto mainChar = ents[0];
@@ -261,9 +243,6 @@ void Game::update(double dt) {
 
 	beforeParts.draw(win);
 
-	for (sf::RectangleShape & r : wallSprites)
-		win.draw(r);
-
 	/*for (sf::RectangleShape& r : rects) 
 		win.draw(r);*/
 
@@ -285,10 +264,6 @@ void Game::onSpacePressed() {
 }
 bool Game::hasCollision(float gridx, float gridy)
 {
-	for (auto& w : walls)
-		if ((w.x == floor(gridx)) && (w.y == floor(gridy)))
-			return true;
-
 	return false;
 }
 
@@ -321,24 +296,7 @@ void Game::DrawGrid(bool canDraw)
 	}
 	win->draw(lines.data(), lines.size(), sf::PrimitiveType::Lines);
 }
-void Game::DrawBuildIndicator(bool canDraw)
-{
-	if (!canDraw) return;
 
-	sf::Vector2i pos = GetWMousePosition();
-	sf::RectangleShape rect;
-	if(cbm == BuildMode::Ennemy)
-	{
-		rect = sf::RectangleShape(Vector2f(C::CELL_SIZE, C::CELL_SIZE * 2));
-		rect.setOrigin({ 0, C::CELL_SIZE });
-	}
-	else
-		rect = sf::RectangleShape(Vector2f(C::CELL_SIZE, C::CELL_SIZE));
-	
-	rect.setPosition(floor(pos.x/ (float)C::CELL_SIZE)*C::CELL_SIZE, floor(pos.y / (float)C::CELL_SIZE) * C::CELL_SIZE);
-	rect.setFillColor(Color(255, 255, 255, 255 / 3));
-	win->draw(rect);
-}
 sf::Vector2i Game::GetWMousePosition()
 {
 	return sf::Mouse::getPosition(*win) + Vector2i(win->getView().getCenter() - win->getView().getSize() / 2.f);
@@ -348,19 +306,9 @@ sf::Vector2i Game::GetSMousePosition()
 	return sf::Mouse::getPosition(*win);
 }
 
-bool Game::isWall(int cx, int cy)
-{
-	for (Vector2i & w : walls) {
-		if (w.x == cx && w.y == cy)
-			return true;
-	}
-	return false;
-}
-
 void Game::DrawDebug()
 {
 	DrawGrid(canDrawGrid);
-	DrawBuildIndicator(canBuild);
 }
 
 
@@ -368,65 +316,6 @@ void Game::DrawDebug()
 void Game::SleepDT(double sleep)
 {
 	cSleep = sleep;
-}
-
-void Game::UpdateBuild()
-{
-	auto& io = ImGui::GetIO();
-	if (!canBuild || io.WantCaptureMouse || io.WantCaptureKeyboard)
-		return;
-	else if(Mouse::isButtonPressed(Mouse::Left) && cbm == BuildMode::Block)
-	{
-		sf::Vector2i pos = GetWMousePosition();
-		auto newPos = Vector2i(floor(pos.x / 16.f), floor(pos.y / 16.f));
-		for(uint32_t i = 0; i < walls.size(); i++ )
-		{
-			if (walls[i].x == newPos.x && walls[i].y == newPos.y)
-				return;
-		}
-		walls.push_back(newPos);
-		cacheWalls();
-	}
-	else if (Mouse::isButtonPressed(Mouse::Left) && cbm == BuildMode::Ennemy)
-	{
-		sf::Vector2i pos = GetWMousePosition();
-		auto newPos = Vector2i(floor(pos.x / 16.f), floor(pos.y / 16.f));
-		for (uint32_t i = 0; i < ents.size(); i++)
-		{
-			if (ents[i]->cx == newPos.x && ents[i]->cy == newPos.y)
-				return;
-		}
-		initEnnemy(newPos.x, newPos.y);
-	}
-	else if (Mouse::isButtonPressed(Mouse::Right))
-	{
-		sf::Vector2i pos = GetWMousePosition();
-		auto newPos = Vector2i(floor(pos.x / 16.f), floor(pos.y / 16.f));
-		if(cbm == BuildMode::Block)
-		{
-			for (uint32_t i = 0; i < walls.size(); i++)
-			{
-				if (walls[i].x == newPos.x && walls[i].y == newPos.y)
-				{
-					walls.erase(walls.begin() + i);
-					break;
-				}
-			}
-			cacheWalls();
-		}else if(cbm == BuildMode::Ennemy)
-		{
-			for (uint32_t i = 0; i < ents.size(); i++)
-			{
-				Entity* e = ents[i];
-				if (e->eType == EntityType::Enemy && e->cx == newPos.x && (e->cy == newPos.y || e->cy == newPos.y + 1))
-				{
-					
-					ents.erase(ents.begin() + i);
-					delete e;
-				}
-			}
-		}
-	}
 }
 
 void Game::im()
@@ -447,14 +336,6 @@ void Game::im()
 				dtModifier = 1.f;
 			TreePop();
 		}
-		if (TreeNodeEx("Walls", 0)) {
-			for (auto& w : walls) {
-				Value("x", w.x);
-				Value("y", w.y);
-			}
-			TreePop();
-
-		}
 		if (TreeNodeEx("Entities")) {
 			for (auto e : ents)
 			{
@@ -468,92 +349,6 @@ void Game::im()
 		}
 		
 	}
-	if (ImGui::CollapsingHeader("Level Design"))
-	{
-		if(Checkbox("Can Build", &canBuild))
-		{
-			dtModifier = canBuild ? 0 : 1;
-		}
-		int i = (int)cbm;
-		const char* entityTypeNames[] = { "None", "Block", "Ennemy" };
-		if (ImGui::Combo("Build Mode", &i, entityTypeNames, 3))
-		{
-			cbm = (BuildMode)i;
-		}
-		Separator();
-
-		static bool savePl = false;
-		Checkbox("Save Player", &savePl);
-		
-		static char str0[128] = "Level";
-		InputText("", str0, IM_ARRAYSIZE(str0));
-		
-		if(Button("Save"))
-		{
-			ofstream level(str0);
-			LevelToFile(level, savePl);
-		}
-		SameLine();
-		if (Button("Load"))
-		{
-			ifstream level(str0);
-			FileToLevel(level, savePl);
-		}
-
-				
-	}
-}
-void Game::LevelToFile(ofstream& of, bool player)
-{
-	for(Entity* e : ents)
-	{
-		if (player && e->eType == EntityType::Player)
-			of << "P " << e->getPosPixel().x<< " " << e->getPosPixel().y << "\n";
-		else if (e->eType == EntityType::Enemy)
-			of << "E " << e->cx << " " << e->cy << "\n";
-	}
-	for (Vector2i w : walls)
-	{
-		of << "W " << w.x << " " << w.y << "\n";
-	}
-	of.close();
-}
-
-void Game::FileToLevel(ifstream& ifs, bool pl)
-{
-
-	walls.clear();
-	ClearEnts(pl);
-
-	string type;
-	int x, y;
-
-	while (ifs >> type >> x >> y)
-	{
-
-		if (type == "W") {
-			walls.push_back(Vector2i(x, y));
-		}
-		else if (type == "P" && pl) {
-			int cx = x / C::CELL_SIZE;
-			int cy = y / C::CELL_SIZE;
-
-			float rx = (x - (cx * C::CELL_SIZE)) / (float)C::CELL_SIZE;
-			float ry = (y - (cy * C::CELL_SIZE)) / (float)C::CELL_SIZE;
-
-			initMainChar(cx, cy, rx, ry);
-		}
-		else if (type == "E") {
-			initEnnemy(x, y);
-		}
-	}
-
-	ifs.close();
-	cacheWalls();
-
-	if(pl)
-		cam->SetFollowTarget(ents[0], { 0, -300.f }, { 250.f, 0.f });
-
 }
 void Game::ClearEnts(bool pl)
 {

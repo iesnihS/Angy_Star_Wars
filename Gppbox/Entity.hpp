@@ -42,11 +42,13 @@ class Entity
 		float dx = 0.f; 
 		float dy = 0.f;
 
+		float ms = 200.0f; //Max Speed
+
 		float gravity = 0.f;
 
 		//Friction
-		float frx = 0.8f;
-		float fry = 0.8f;
+		float frx = 1.f;
+		float fry = 1.f;
 
 		sf::Vector2f dv = sf::Vector2f::Vector2(0, 0); //Desire Velocity
 

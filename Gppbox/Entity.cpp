@@ -23,6 +23,9 @@ void Entity::update(double dt)
 	dx = dx * pow(frx, dfr);
 	dy = dy * pow(fry, dfr);
 
+	dx = clamp(dx, -ms, ms);
+	dy = clamp(dy, -ms, ms);
+
 	rx += dx * dt;
 	ry += dy * dt;
 
@@ -53,69 +56,32 @@ void Entity::ManagePhysic(double dt)
 				touched->Reset();
 			}	
 		}
-		
-		if (rx + 0.5f > 1.0f)
+
+		if (rx >= 1)
 		{
-			bool side1 = g.hasCollision(cx + rx + 0.5f, cy + ry - 0.5f);
-			bool side2 = g.hasCollision(cx + rx + 0.5f, cy + ry - 1.5f);
-			bool floor1 = g.hasCollision(cx + rx + 0.5f, cy + ry + .5f);
-
-			if (((eType == EntityType::Enemy && floor1) || eType == EntityType::Player)&& !side1 && !side2)
-			{
-				rx--;
-				cx++;
-			}
-			else {
-				rx -= dx * dt;
-				dx = 0;
-				if (eType == EntityType::Enemy)
-					dv.x = -1;
-			}
-
+			int delta = floor(rx);
+			cx +=  delta ;
+			rx -= delta;
 		}
-		if (rx - 0.5 < 0) {
-			bool side1 = g.hasCollision(cx + rx - 0.5, cy + ry - 0.5f);
-			bool side2 = g.hasCollision(cx + rx - 0.5f, cy + ry - 1.5f);
-			bool floor1 = g.hasCollision(cx + rx - 0.5f, cy + ry + .5f);
-			if (((eType == EntityType::Enemy && floor1) || eType == EntityType::Player) && !side1 && !side2)
-			{
-				rx++;
-				cx--;
-			}
-			else {
-				rx -= dx * dt;
-				dx = 0;
-				if (eType == EntityType::Enemy)
-					dv.x = 1;
-			}
+		else if(rx <= -1)
+		{
+			int delta = ceil(rx);
+			cx += delta;
+			rx -= delta;
 		}
 
-		/*if ((dy > 0)) {
-			if (g.hasCollision(cx + rx + 0.5f, cy + ry) || g.hasCollision(cx + rx - 0.5f, cy + ry)) {
-				ry = 0.99f;
-				dy = 0;
-			}
-			else {
-				if (ry > 1) {
-					ry--;
-					cy++;
-				}
-			}
+		if (ry >= 1)
+		{
+			int delta = floor(ry);
+			cy += delta;
+			ry -= delta;
 		}
-
-		if (dy < 0) {
-			if (g.hasCollision(cx + rx, cy + ry - 2))
-			{
-				ry -= dy * dt;
-				dy = 0;
-			}
-			while (ry < 0)
-			{
-				ry++;
-				cy--;
-			}
-		}*/
-
+		else if (ry <= -1)
+		{
+			int delta = ceil(ry);
+			cy += delta;
+			ry -= delta;
+		}
 	}
 	else if(eType == EntityType::Bullet)
 	{
