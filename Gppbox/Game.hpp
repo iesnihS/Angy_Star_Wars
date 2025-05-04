@@ -35,6 +35,9 @@ public:
 	sf::RenderWindow*				win = nullptr;
 
 	sf::RectangleShape				bg;
+	std::vector <sf::RectangleShape> bgsFar;
+	std::vector <sf::RectangleShape> bgsDistant;
+	std::vector <sf::RectangleShape> bgsClose;
 	HotReloadShader *				bgShader = nullptr;
 
 	sf::Texture						tex;
@@ -42,6 +45,13 @@ public:
 	bool canDrawGrid = true;
 	float dtModifier = 1;
 	bool							closing = false;
+
+	float farScrollSpeed = 0.1f;
+	float dstntScrollSpeed = 100.f;
+	float closeScrollSpeed = 1000.f;
+	sf::Vector2f farOffsetPos;
+	sf::Vector2f dstntOffsetPos;
+	sf::Vector2f closeOffsetPos;
 
 	std::vector<Entity*> ents;
 	std::vector<VFX*> fVFX; //Front

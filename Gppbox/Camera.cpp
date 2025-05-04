@@ -33,7 +33,16 @@ void Camera::UpdateCamera(double dt,sf::RenderWindow* win)
 		x = lerp(-dOffset.x, dOffset.x,t);
 	}
 
-	v.setCenter(target->getPosPixelf() + offset + sf::Vector2f{x,0.f} + scOffset);
+	if (target->dv.y > 0.1 || target->dv.y < -0.1)
+	{
+		bool sign = target->dv.y > 0;
+		tempOffset.y += (sign ? dOffset.y : -dOffset.y) * sCam;
+		tempOffset.y = fminf(fmaxf(tempOffset.y, -dOffset.y), dOffset.y);
+		float t = map(tempOffset.y, -dOffset.y, dOffset.y, 0, 1);
+		y = lerp(-dOffset.y, dOffset.y, t);
+	}
+
+	v.setCenter(target->getPosPixelf() + offset + sf::Vector2f{x,y} + scOffset);
 	win->setView(v);
 }
 

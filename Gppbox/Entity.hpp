@@ -62,6 +62,7 @@ class Entity
 
 		//Convert Pixel coord to Cell coord
 		void setCooPixel(int px, int py);
+		sf::Vector2f getCooPixel();
 		void setCooGrid(float coox, float cooy);
 		void syncPos();
 		void draw(sf::RenderWindow& win);
