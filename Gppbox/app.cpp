@@ -169,6 +169,11 @@ int main()
 		g.draw(window);
 		g.DrawDebug();
 
+		sf::Vector2f point = window.mapPixelToCoords(window.getPosition());
+		point.x -= 450;
+		point.y -= 250;
+		fpsCounter.setPosition(point);
+		
 		window.draw(fpsCounter);
 
 		

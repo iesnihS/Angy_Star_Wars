@@ -1,4 +1,5 @@
 #include <imgui.h>
+#include <iostream> 
 #include <array>
 #include <vector>
 #include "Entity.hpp"
@@ -19,7 +20,8 @@ Game* Game::instance = 0;
 PlanetManager pm;
 
 
-Game::Game(sf::RenderWindow* win) {
+Game::Game(sf::RenderWindow* win) 
+{
 
 	instance = this;
 	this->win = win;
@@ -265,6 +267,7 @@ void Game::update(double dt)
 	afterParts.update(dt);
 
 	cam->UpdateCamera(dt, win);
+	
 }
 
  void Game::draw(sf::RenderWindow & win) {
@@ -313,6 +316,7 @@ void Game::update(double dt)
 	}
 
 	afterParts.draw(win);
+	
 }
 
 void Game::onSpacePressed() {
