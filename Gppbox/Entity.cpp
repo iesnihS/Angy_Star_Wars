@@ -2,6 +2,7 @@
 #include "Entity.hpp"
 #include "C.hpp"
 #include "Game.hpp"
+#include <cmath>
 
 Entity::Entity(Shape* shape, EntityType t, float s) : sptr(shape), eType(t), speed(s)
 {
@@ -31,6 +32,7 @@ void Entity::update(double dt)
 
 	ManagePhysic(dt);
 	ShootBullet(dt);
+	sptr->setRotation(atan2(dy, dx) * 180 / M_PI + 90);
 	syncPos();
 
 	if (eType != EntityType::Bullet) return;
@@ -131,7 +133,6 @@ void Entity::Reset()
 
 	dx = dy = 0;
 }
-
 
 void Entity::setCooGrid(float coox, float cooy)
 {
@@ -301,6 +302,7 @@ void Entity::AddBulletBuffer()
 	if(bBuffer < maxSizeBB)
 		bBuffer++;
 }
+
 void Entity::CreateExplosion()
 {
 	
