@@ -13,9 +13,11 @@ class PlanetManager
 {
 public:
 
+	sf::Vector2i playerPos = { 343453452,32452345 };
 	std::unordered_map<sf::Vector2i, Chunck*, Vector2iHash> chunks;
 	void SetPlayerActiveChuncks(Entity& pl);
 	Chunck* GetChunck(sf::Vector2i);
+	void SetActiveChunck(sf::Vector2i pos);
 	std::vector<Chunck*> activeChunks;
 	~PlanetManager();
 	bool im();

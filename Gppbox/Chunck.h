@@ -10,7 +10,7 @@ public :
 	sf::Vector2i pos;
 	Chunck(sf::Vector2i tpos);
 	~Chunck();
-	std::vector<std::vector<Planet*>> _planetMap = std::vector<std::vector<Planet*>>(200, std::vector<Planet*>(200,nullptr));
+	std::vector<Planet*> _planetMap;
 	void draw(sf::RenderWindow& win);
 	bool im();
 };

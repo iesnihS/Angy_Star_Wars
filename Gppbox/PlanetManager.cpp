@@ -1,28 +1,45 @@
 #include "PlanetManager.h"
+#include "C.hpp"
 
 void PlanetManager::SetPlayerActiveChuncks(Entity& pl)
 {	
 	int xCoord = floor(pl.getPosPixelf().x / Chunck::sizePixel);
 	int yCoord = floor(pl.getPosPixelf().y / Chunck::sizePixel);
 
-	activeChunks.clear();
-	activeChunks.push_back(GetChunck({ xCoord, yCoord}));
-	activeChunks.push_back(GetChunck({ xCoord + 1, yCoord }));
-	activeChunks.push_back(GetChunck({ xCoord - 1, yCoord }));
-	activeChunks.push_back(GetChunck({ xCoord + 1, yCoord -1}));
-	activeChunks.push_back(GetChunck({ xCoord - 1, yCoord -1}));
-	activeChunks.push_back(GetChunck({ xCoord + 1, yCoord + 1 }));
-	activeChunks.push_back(GetChunck({ xCoord - 1, yCoord + 1 }));
-	activeChunks.push_back(GetChunck({ xCoord, yCoord + 1 }));
-	activeChunks.push_back(GetChunck({ xCoord, yCoord - 1 }));
+	sf::Vector2i currentCoord = { xCoord,yCoord };
+	if(playerPos != currentCoord)
+	{
+		playerPos = currentCoord;
+		activeChunks.clear();
+		
+		SetActiveChunck(playerPos);
+		SetActiveChunck({ xCoord + 1, yCoord });
+		SetActiveChunck({ xCoord - 1, yCoord });
+		
+		SetActiveChunck({ xCoord + 1, yCoord - 1 });
+		SetActiveChunck({ xCoord - 1, yCoord - 1 });
+		SetActiveChunck({ xCoord + 1, yCoord + 1 });
+		
+		SetActiveChunck({ xCoord - 1, yCoord + 1 });
+		SetActiveChunck({ xCoord, yCoord + 1 });
+		SetActiveChunck({ xCoord, yCoord - 1 });
+	}
+}
+
+void PlanetManager::SetActiveChunck(sf::Vector2i pos)
+{
+	Chunck* c = GetChunck(pos);
+	if(c!= nullptr)
+		activeChunks.push_back(c);
 }
 
 Chunck* PlanetManager::GetChunck(sf::Vector2i pos)
 {
+	if (abs(pos.x) > C::LimitChunck || abs(pos.y) > C::LimitChunck)
+		return nullptr;
 	auto it = chunks.find(pos);
 	if (it == chunks.end()) 
 	{
-		
 		Chunck* chunk = new Chunck(pos);
 		chunks[pos] = chunk;
 		return chunk;

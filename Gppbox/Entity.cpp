@@ -3,6 +3,7 @@
 #include "C.hpp"
 #include "Game.hpp"
 #include <cmath>
+#include "Chunck.h"
 
 Entity::Entity(Shape* shape, EntityType t, float s) : sptr(shape), eType(t), speed(s)
 {
@@ -162,6 +163,7 @@ sf::Vector2f Entity::getCooPixel()
 void Entity::syncPos()
 {
 	sf::Vector2f pos = { (cx + rx) * C::CELL_SIZE,(cy + ry) * C::CELL_SIZE };
+
 	sptr->setPosition(pos);
 }
 
