@@ -153,6 +153,11 @@ void Entity::setCooPixel(int px, int py)
 	syncPos();
 }
 
+sf::Vector2f Entity::getCooPixel()
+{
+	return  { (cx + rx) * C::CELL_SIZE,(cy + ry) * C::CELL_SIZE };
+}
+
 void Entity::syncPos()
 {
 	sf::Vector2f pos = { (cx + rx) * C::CELL_SIZE,(cy + ry) * C::CELL_SIZE };

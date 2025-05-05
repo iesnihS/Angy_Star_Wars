@@ -12,6 +12,7 @@
 #include "PlanetManager.h"
 
 
+#define BG_SPR sf::RectangleShape(Vector2f(C::BG_RES_X, C::BG_RES_Y))
 
 static int cols = C::RES_X / C::CELL_SIZE;
 static int lastLine = C::RES_Y / C::CELL_SIZE - 1;
@@ -27,20 +28,37 @@ Game::Game(sf::RenderWindow * win) {
 
 	cam = new Camera();
 
-	bg = sf::RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
+	//bg = sf::RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
+	bg = sf::RectangleShape(Vector2f(C::BG_RES_X, C::BG_RES_Y));
 
 	bool isOk = tex.loadFromFile("res/bg_stars.png");
 	if (!isOk) {
 		printf("ERR : LOAD FAILED\n");
 	}
+
+	for (int b = 0; b < 9; ++b)
+	{
+		sf::RectangleShape bgSpr = BG_SPR;
+		bgSpr.setTexture(&tex);
+		bgSpr.setSize(sf::Vector2f(C::BG_RES_X, C::BG_RES_Y));
+		bgsFar.push_back(bgSpr);
+	}
+	for (int x = -1; x < 2; ++x)
+	{
+		for (int y = -1; y < 2; ++y)
+		{
+			int i = x + 1 + (y + 1) * 3;
+			bgsFar[i].setPosition(C::BG_RES_X * x, C::BG_RES_Y * y);
+		}
+	}
 	bg.setTexture(&tex);
-	bg.setSize(sf::Vector2f(C::RES_X, C::RES_Y));
+	bg.setSize(sf::Vector2f(C::BG_RES_X, C::BG_RES_Y));
 
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
 	
 	initMainChar(3,54,0.5f,0.99f);
 
-	cam->SetFollowTarget(ents[0], { 0, -300.f }, {250.f, 0.f });
+	cam->SetFollowTarget(ents[0], { 0, 0.f }, {250.f, 250.f });
 }
 
 void Game::initMainChar(int cx, int cy, float rx, float ry)
@@ -81,7 +99,6 @@ void Game::initEnnemy(int cx, int cy)
 
 	ents.push_back(e);
 }
-
 
 void Game::processInput(sf::Event ev) {
 	if (ev.type == sf::Event::Closed) {
@@ -214,6 +231,24 @@ void Game::update(double dt) {
 		ents.erase(ents.begin() + i);
 		delete e;
 	}
+	sf::Vector2f playerPos = ents[0]->getCooPixel();
+	sf::Vector2f playerVel = { ents[0]->dx, ents[0]->dy };
+	//sf::Vector2f playerVel = { 10.f, 10.f };
+	playerVel *= (float)dt;
+
+	farOffsetPos -= playerVel * farScrollSpeed;
+	dstntOffsetPos -= playerVel * dstntScrollSpeed;
+	closeOffsetPos -= playerVel * closeScrollSpeed;
+	for (int x = -1; x < 2; ++x)
+	{
+		for (int y = -1; y < 2; ++y)
+		{
+			int i = x + 1 + (y + 1) * 3;
+			sf::Vector2f pos = { (playerPos.x + farOffsetPos.x + C::BG_RES_X / 2) - C::BG_RES_X * x,
+						(playerPos.y + farOffsetPos.y + C::BG_RES_Y / 2) - C::BG_RES_Y * y };
+			bgsFar[i].setPosition(pos.x, pos.y);
+		}
+	}
 
 	for (int i = fVFX.size() - 1; i >= 0; i--)
 	{
@@ -245,7 +280,21 @@ void Game::update(double dt) {
 	states.texture = &tex;
 	sh->setUniform("texture", tex);
 	//sh->setUniform("time", g_time);
-	win.draw(bg, states);
+
+	//bgsFar[0].setPosition(playerPos.x - C::BG_RES_X/2 , playerPos.y - C::BG_RES_Y/2);
+	//win.draw(bgsFar[0], states);
+
+	for (sf::RectangleShape shape : bgsFar) win.draw(shape, states);
+	for (sf::RectangleShape shape : bgsDistant) win.draw(shape, states);
+	for (sf::RectangleShape shape : bgsClose) win.draw(shape, states);
+	// Background draw
+	/*for (sf::RectangleShape shape : bgsFar)
+	{
+		sf::Vector2f pos = shape.getPosition();
+		shape.setPosition(pos.x + playerPos.x + (playerVel.x * farScrollSpeed), 
+			pos.y + playerPos.y + playerPos.y + (playerVel.y * farScrollSpeed));
+		win.draw(shape, states);
+	}*/
 
 	beforeParts.draw(win);
 
@@ -265,7 +314,6 @@ void Game::update(double dt) {
 	{
 		chunck->draw(win);
 	}
-	
 
 	afterParts.draw(win);
 }
