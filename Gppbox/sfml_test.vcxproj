@@ -195,6 +195,7 @@
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="PlanetManager.h" />
+    <ClInclude Include="single_include\nlohmann\json.hpp" />
     <ClInclude Include="VFX.h" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="HotReloadShader.hpp" />

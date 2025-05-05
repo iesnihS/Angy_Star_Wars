@@ -10,7 +10,8 @@
 #include "fstream"
 #include "Utils.h"
 #include "PlanetManager.h"
-
+#include "single_include/nlohmann/json.hpp"
+using json = nlohmann::json;
 
 #define BG_SPR sf::RectangleShape(Vector2f(C::BG_RES_X, C::BG_RES_Y))
 
