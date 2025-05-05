@@ -43,7 +43,7 @@ static int curDts = 0;
 int main()
 {
 	srand(time(0));
-	sf::RenderWindow window(sf::VideoMode(C::RES_X, C::RES_Y, 32), "Juicy Game!");
+	sf::RenderWindow window(sf::VideoMode(C::RES_X, C::RES_Y, 32), "Angy Star Wars !!");
 	//sf::RenderWindow window(sf::VideoMode(800, 600,32), "SFML works!");
 	//sf::RenderWindow window(sf::VideoMode(1280, 720,32), "SFML works!");
 	window.setVerticalSyncEnabled(true);
