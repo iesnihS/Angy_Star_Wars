@@ -88,25 +88,13 @@ void Entity::ManagePhysic(double dt)
 		float ratio = (size / (float)C::CELL_SIZE);
 		if (rx + ratio > 1.0f)
 		{
-			if (!g.hasCollision(cx + rx + ratio, cy + ry - 0.5f) && !g.hasCollision(cx + rx + ratio, cy + ry - 1.5f)) {
-				rx--;
-				cx++;
-			}
-			else {
-				dx = 0;
-				Destroy();
-			}
+			rx--;
+			cx++;
 		}
 		if (rx - ratio < 0)
 		{
-			if (!g.hasCollision(cx + rx - ratio, cy + ry - 0.5f) && !g.hasCollision(cx + rx - ratio, cy + ry - 1.5f)) {
-				rx--;
-				cx++;
-			}
-			else {
-				dx = 0;
-				Destroy();
-			}
+			rx--;
+			cx++;
 		}
 	}
 
@@ -260,27 +248,32 @@ void Entity::ShootBullet(double dt)
 	sprite->setOrigin({ 12 * 0.5f,12 * 0.5});
 	Entity* e = new Entity(sprite, EntityType::Bullet, 70);
 	
-	bool mDir =  signbit((getSPosPixel() - g.GetSMousePosition()).x);
-	if(sf::Joystick::isConnected(0))
+	Vector2f dir =  (Vector2f)getSPosPixel() - (Vector2f)g.GetSMousePosition();
+
+	/*if(sf::Joystick::isConnected(0))
 	{
 		if (sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Z) < -10)
 			mDir = true;
 		else if(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Z) > 10)
 			mDir = false;
-	}
+	}*/
 
-	dx += mDir ? -kb : kb;
+	dx += dir.x <0 ? -kb : kb;
+	
 
-	float xOffset = (mDir ? 0.5f : -0.5f);
+	float xOffset = (dir.x < 0 ? 0.5f : -0.5f);
+	
+	printf("dirx = %f, y %f \n", dir.x, dir.y);
 
 	e->lifeTime = 3.f;
 	e->size = 12;
 	e->ry = ry;
 	e->cx = cx;
 	e->cy = cy - 1;
-	e->rx = rx + xOffset;
+	e->rx = rx - xOffset;
 	e->frx = 1;
-	e->dx = e->speed * (mDir ? 1 : -1);
+	e->dx = e->speed * -dir.x;
+	e->dy = e->speed * -dir.y;
 	e->syncPos();
 	e->parent = this;
 	g.ents.push_back(e);

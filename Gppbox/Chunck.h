@@ -13,5 +13,7 @@ public :
 	std::vector<std::vector<Planet*>> _planetMap = std::vector<std::vector<Planet*>>(200, std::vector<Planet*>(200,nullptr));
 	void draw(sf::RenderWindow& win);
 	bool im();
+	void to_json(json& j);
+	void from_json(const json& j);
 };
 

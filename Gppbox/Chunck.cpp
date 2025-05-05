@@ -2,6 +2,7 @@
 #include <imgui.h>
 #include "C.hpp"
 #include <random>
+#include <sstream>
 
 uint32_t Chunck::size = C::RES_X / C::CELL_SIZE;
 uint32_t Chunck::sizePixel = (C::RES_X / C::CELL_SIZE)*C::CELL_SIZE;
@@ -59,4 +60,28 @@ bool Chunck::im()
 	SameLine();
 	Value(" Y", pos.y);
 	return true;
+}
+
+void Chunck::to_json(json& j) {
+	j["chunk"]["pos"]["x"] = pos.x;
+	j["chunk"]["pos"]["y"] = pos.y;
+	for (uint32_t x = 0; x < size; x++)
+	{
+		for (uint32_t y = 0; y < size; y++)
+		{
+			Planet* p = _planetMap[x][y];
+			if (p == nullptr)
+				continue;
+			json pj;
+			p->to_json(pj);
+			
+			std::ostringstream planetName;
+			planetName << "Planet " << x << ":" << y;
+			j["chunk"]["planets"][planetName.str()] = pj;
+		}
+	}
+}
+
+void Chunck::from_json(const json& j) {
+	pos = sf::Vector2i{ j["pos"]["x"],j["pos"]["y"]};
 }

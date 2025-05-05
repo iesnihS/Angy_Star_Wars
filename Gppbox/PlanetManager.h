@@ -12,12 +12,14 @@ struct Vector2iHash {
 class PlanetManager
 {
 public:
-
+	sf::Vector2i playerPos = { 2342389,4848823 };
+	std::ofstream* jsonStream;
 	std::unordered_map<sf::Vector2i, Chunck*, Vector2iHash> chunks;
 	void SetPlayerActiveChuncks(Entity& pl);
 	Chunck* GetChunck(sf::Vector2i);
 	std::vector<Chunck*> activeChunks;
 	~PlanetManager();
+	PlanetManager();
 	bool im();
 };
 
