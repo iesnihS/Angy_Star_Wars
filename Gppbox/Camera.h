@@ -16,6 +16,7 @@ class Camera
 		sf::Vector2f tempOffset = sf::Vector2f::Vector2(0.f, 0.f); //tempory Offset
 		float x = 0; //x displacement current Offset
 	public :
+		float zoom = 1;
 		int scPower = 20;
 		float sCam = 0.02f; //Speed Cam;
 		Camera();

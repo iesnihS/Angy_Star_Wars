@@ -166,7 +166,10 @@
   <ItemGroup>
     <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Chunck.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="PlanetManager.cpp" />
     <ClCompile Include="VFX.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HotReloadShader.cpp" />
@@ -185,8 +188,11 @@
     <ClInclude Include="Bloom.hpp" />
     <ClInclude Include="C.hpp" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Chunck.h" />
     <ClInclude Include="Dice.hpp" />
     <ClInclude Include="Entity.hpp" />
+    <ClInclude Include="Planet.h" />
+    <ClInclude Include="PlanetManager.h" />
     <ClInclude Include="VFX.h" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="HotReloadShader.hpp" />

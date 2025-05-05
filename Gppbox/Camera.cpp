@@ -18,7 +18,8 @@ void Camera::UpdateCamera(double dt,sf::RenderWindow* win)
 		return;
 
 	auto v = win->getDefaultView();
-	
+	v.zoom(zoom);
+
 	if (cxTween != nullptr)
 		scOffset.x = cxTween->Update(dt);
 	if (cyTween != nullptr)
@@ -32,7 +33,6 @@ void Camera::UpdateCamera(double dt,sf::RenderWindow* win)
 		float t = map(tempOffset.x, -dOffset.x, dOffset.x, 0, 1);
 		x = lerp(-dOffset.x, dOffset.x,t);
 	}
-
 	v.setCenter(target->getPosPixelf() + offset + sf::Vector2f{x,0.f} + scOffset);
 	win->setView(v);
 }
@@ -49,8 +49,10 @@ bool Camera::im()
 	{
 		AddScreenShake();
 	}
-
+	
+	
 	bool chg = DragFloat("Speed Camera", &sCam, 0.001f);
+	chg | DragFloat("Zoom", &zoom, 0.01f, 0, 100);
 	chg | DragFloat2("Displacement Offset", &dOffset.x, 1.f);
 	chg | DragInt("Screen Shake Power", &scPower, 1.f);
 	

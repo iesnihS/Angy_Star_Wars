@@ -9,11 +9,15 @@
 #include "HotReloadShader.hpp"
 #include "fstream"
 #include "Utils.h"
+#include "PlanetManager.h"
+
 
 
 static int cols = C::RES_X / C::CELL_SIZE;
 static int lastLine = C::RES_Y / C::CELL_SIZE - 1;
 Game* Game::instance = 0;
+
+PlanetManager pm;
 
 
 Game::Game(sf::RenderWindow * win) {
@@ -223,6 +227,8 @@ void Game::update(double dt) {
 
 	if (bgShader) bgShader->update(dt);
 
+	pm.SetPlayerActiveChuncks(*ents[0]);
+
 	beforeParts.update(dt);
 	afterParts.update(dt);
 
@@ -253,6 +259,11 @@ void Game::update(double dt) {
 	for (auto& vfx : fVFX)
 	{
 		vfx->Draw(&win);
+	}
+
+	for(auto& chunck : pm.activeChunks)
+	{
+		chunck->draw(win);
 	}
 	
 
@@ -345,6 +356,10 @@ void Game::im()
 		}
 		if (TreeNodeEx("Camera", 0)) {
 			cam->im();
+			TreePop();
+		}
+		if (TreeNodeEx("Planets", 0)) {
+			pm.im();
 			TreePop();
 		}
 		
