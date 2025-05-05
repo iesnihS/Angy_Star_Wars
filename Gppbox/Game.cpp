@@ -1,4 +1,3 @@
-
 #include <imgui.h>
 #include <array>
 #include <vector>
@@ -13,8 +12,6 @@
 #include "single_include/nlohmann/json.hpp"
 using json = nlohmann::json;
 
-#define BG_SPR sf::RectangleShape(Vector2f(C::BG_RES_X, C::BG_RES_Y))
-
 static int cols = C::RES_X / C::CELL_SIZE;
 static int lastLine = C::RES_Y / C::CELL_SIZE - 1;
 Game* Game::instance = 0;
@@ -22,7 +19,7 @@ Game* Game::instance = 0;
 PlanetManager pm;
 
 
-Game::Game(sf::RenderWindow * win) {
+Game::Game(sf::RenderWindow* win) {
 
 	instance = this;
 	this->win = win;
@@ -39,27 +36,32 @@ Game::Game(sf::RenderWindow * win) {
 
 	for (int b = 0; b < 9; ++b)
 	{
-		sf::RectangleShape bgSpr = BG_SPR;
-		bgSpr.setTexture(&tex);
-		bgSpr.setSize(sf::Vector2f(C::BG_RES_X, C::BG_RES_Y));
-		bgsFar.push_back(bgSpr);
+		BgElement e(tex, 2);
+		bgsFar.push_back(e);
 	}
+
 	for (int x = -1; x < 2; ++x)
 	{
 		for (int y = -1; y < 2; ++y)
 		{
 			int i = x + 1 + (y + 1) * 3;
-			bgsFar[i].setPosition(C::BG_RES_X * x, C::BG_RES_Y * y);
+
+			bgsFar[i].SetStartPos
+			({
+				0,0//(float)C::BG_RES_X / 2 - (float)C::BG_RES_X * x,
+				//(float)C::BG_RES_Y / 2 - (float)C::BG_RES_Y * y
+			});
+
 		}
 	}
 	bg.setTexture(&tex);
 	bg.setSize(sf::Vector2f(C::BG_RES_X, C::BG_RES_Y));
 
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
-	
-	initMainChar(3,54,0.5f,0.99f);
 
-	cam->SetFollowTarget(ents[0], { 0, 0.f }, {250.f, 250.f });
+	initMainChar(0, 0, 0.5f, 0.99f);
+
+	cam->SetFollowTarget(ents[0], { 0, 0.f }, { 250.f, 250.f });
 }
 
 void Game::initMainChar(int cx, int cy, float rx, float ry)
@@ -78,7 +80,6 @@ void Game::initMainChar(int cx, int cy, float rx, float ry)
 	e->rx = rx;
 	e->syncPos();
 	
-
 	ents.push_back(e);
 }
 
@@ -214,7 +215,8 @@ int blendModeIndex(sf::BlendMode bm) {
 	return 4;
 };
 
-void Game::update(double dt) {
+void Game::update(double dt) 
+{
 	dt *= dtModifier;
 	cSleep = fmax(cSleep-dt, 0);
 	dt = cSleep <= 0 ? dt : 0;
@@ -234,20 +236,14 @@ void Game::update(double dt) {
 	}
 	sf::Vector2f playerPos = ents[0]->getCooPixel();
 	sf::Vector2f playerVel = { ents[0]->dx, ents[0]->dy };
-	//sf::Vector2f playerVel = { 10.f, 10.f };
 	playerVel *= (float)dt;
 
-	farOffsetPos -= playerVel * farScrollSpeed;
-	dstntOffsetPos -= playerVel * dstntScrollSpeed;
-	closeOffsetPos -= playerVel * closeScrollSpeed;
 	for (int x = -1; x < 2; ++x)
 	{
 		for (int y = -1; y < 2; ++y)
 		{
 			int i = x + 1 + (y + 1) * 3;
-			sf::Vector2f pos = { (playerPos.x + farOffsetPos.x + C::BG_RES_X / 2) - C::BG_RES_X * x,
-						(playerPos.y + farOffsetPos.y + C::BG_RES_Y / 2) - C::BG_RES_Y * y };
-			bgsFar[i].setPosition(pos.x, pos.y);
+			bgsFar[i].Update(playerPos, playerVel, x, y);
 		}
 	}
 
@@ -285,9 +281,9 @@ void Game::update(double dt) {
 	//bgsFar[0].setPosition(playerPos.x - C::BG_RES_X/2 , playerPos.y - C::BG_RES_Y/2);
 	//win.draw(bgsFar[0], states);
 
-	for (sf::RectangleShape shape : bgsFar) win.draw(shape, states);
-	for (sf::RectangleShape shape : bgsDistant) win.draw(shape, states);
-	for (sf::RectangleShape shape : bgsClose) win.draw(shape, states);
+	for (BgElement el : bgsFar) el.Draw(&win);
+	//for (sf::RectangleShape shape : bgsDistant) win.draw(shape, states);
+	//for (sf::RectangleShape shape : bgsClose) win.draw(shape, states);
 	// Background draw
 	/*for (sf::RectangleShape shape : bgsFar)
 	{

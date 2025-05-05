@@ -12,6 +12,7 @@
 #include "ParticleMan.hpp"
 #include "Camera.h"
 #include "VFX.h"
+#include "BgElement.h"
 
 
 using namespace sf;
@@ -35,9 +36,13 @@ public:
 	sf::RenderWindow*				win = nullptr;
 
 	sf::RectangleShape				bg;
-	std::vector <sf::RectangleShape> bgsFar;
-	std::vector <sf::RectangleShape> bgsDistant;
-	std::vector <sf::RectangleShape> bgsClose;
+	//std::vector <sf::RectangleShape> bgsFar;
+	//std::vector <sf::RectangleShape> bgsDistant;
+	//std::vector <sf::RectangleShape> bgsClose;
+	std::vector <BgElement>				bgsFar;
+	std::vector <BgElement>				bgsDistant;
+	std::vector <BgElement>				bgsClose;
+
 	HotReloadShader *				bgShader = nullptr;
 
 	sf::Texture						tex;
